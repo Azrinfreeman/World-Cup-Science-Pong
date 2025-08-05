@@ -1,0 +1,105 @@
+﻿using System.Collections;
+using DG.Tweening;
+using UnityEngine;
+
+public class GoalState : _StatesBase
+{
+    #region implemented abstract members of _StatesBase
+
+    public override void OnActivate()
+    {
+        Debug.Log("<color=green>Goal State</color> OnActive");
+        Managers.UI.inGameUI.stopButton.gameObject.SetActive(false);
+        Managers.PowUps.DestroyPowerups();
+        Managers.PowUps.canSpawnPowerup = false;
+        Managers.Match.Reset();
+        GoalCelebration();
+        Managers.UI.inGameUI.gameBackButton.gameObject.SetActive(false);
+    }
+
+    public override void OnDeactivate()
+    {
+        //      Debug.Log("<color=red>Goal State</color> OnDeactivate");
+    }
+
+    public override void OnUpdate()
+    {
+        //   Debug.Log("<color=yellow>Goal State</color> OnUpdate");
+    }
+
+    #endregion
+
+    public void GoalCelebration()
+    {
+        Managers.UI.inGameUI.SetInfoText("Goal!!!", true);
+        DOTween
+            .To(
+                () => Managers.UI.inGameUI.infoInitColor,
+                x => Managers.UI.inGameUI.info.color = x,
+                new Color(
+                    Managers.UI.inGameUI.infoInitColor.r,
+                    Managers.UI.inGameUI.infoInitColor.g,
+                    Managers.UI.inGameUI.infoInitColor.b,
+                    0
+                ),
+                0.8f
+            )
+            .SetLoops(3)
+            .OnComplete(() =>
+            {
+                Managers.UI.inGameUI.SetInfoText("Kickoff", false);
+                if (GameObject.Find("Player2").GetComponent<Paddle>().owner != PaddleOwner.AI)
+                {
+                    if (Ball.instance.paddle == 1)
+                    {
+                        Debug.Log("Paddle 1 is not bot");
+                        Managers.UI.inGameUI.questionPanel.transform.gameObject.SetActive(true);
+                        Managers
+                            .UI.inGameUI.questionPanel.transform.GetChild(0)
+                            .transform.GetChild(0)
+                            .transform.gameObject.SetActive(true);
+                        Managers
+                            .UI.inGameUI.questionPanel.transform.GetChild(0)
+                            .transform.GetChild(1)
+                            .transform.gameObject.SetActive(false);
+                    }
+                    else if (Ball.instance.paddle == 2)
+                    {
+                        Debug.Log("Paddle 2 is not bot");
+                        Managers.UI.inGameUI.questionPanel.transform.gameObject.SetActive(true);
+                        Managers
+                            .UI.inGameUI.questionPanel.transform.GetChild(0)
+                            .transform.GetChild(0)
+                            .transform.gameObject.SetActive(false);
+                        Managers
+                            .UI.inGameUI.questionPanel.transform.GetChild(0)
+                            .transform.GetChild(1)
+                            .transform.gameObject.SetActive(true);
+                    }
+                }
+                else
+                {
+                    if (Ball.instance.paddle == 1)
+                    {
+                        Debug.Log("Paddle 1 is not bot");
+                        Managers.UI.inGameUI.questionPanel.transform.gameObject.SetActive(true);
+                        Managers
+                            .UI.inGameUI.questionPanel.transform.GetChild(0)
+                            .transform.GetChild(0)
+                            .transform.gameObject.SetActive(true);
+                        Managers
+                            .UI.inGameUI.questionPanel.transform.GetChild(0)
+                            .transform.GetChild(1)
+                            .transform.gameObject.SetActive(false);
+                    }
+                    else
+                    {
+                        Managers.Game.SetState(typeof(KickOffState));
+                        GameObject.Find("Player2").GetComponent<Paddle>().speed =
+                            Constants.PADDLE_SPEED_FOR_AI;
+                    }
+                    //
+                }
+            });
+    }
+}
