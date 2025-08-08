@@ -81,7 +81,7 @@ public class GoalState : _StatesBase
                 {
                     if (Ball.instance.paddle == 1)
                     {
-                        Debug.Log("Paddle 1 is not bot");
+                        //                        Debug.Log("Paddle 1 is not bot");
                         Managers.UI.inGameUI.questionPanel.transform.gameObject.SetActive(true);
                         Managers
                             .UI.inGameUI.questionPanel.transform.GetChild(0)

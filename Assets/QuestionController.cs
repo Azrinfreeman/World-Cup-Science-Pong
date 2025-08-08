@@ -15,6 +15,7 @@ public class QuestionController : MonoBehaviour
     void Awake()
     {
         instance = this;
+        //Debug.Log(QuestionController.instance.levels[0].question[0].answer.ansOnButton);
     }
 
     public void setlevel(int levels)
@@ -76,10 +77,11 @@ public class QuestionController : MonoBehaviour
             for (int i = 0; i < GameObject.Find("QuestionList-" + level).transform.childCount; i++)
             {
                 questionsList.Add(GameObject.Find("QuestionList-" + level).transform.GetChild(i));
-                Debug.Log(
-                    GameObject.Find("QuestionList-" + level).transform.GetChild(i).transform.name
-                );
-
+                /*    Debug.Log(
+                        GameObject.Find("QuestionList-" + level).transform.GetChild(i).transform.name
+                    );
+                  */
+                // NEW
                 for (
                     int l = 0;
                     l < GameObject.Find("QuestionList-" + level).transform.GetChild(i).childCount;
@@ -149,6 +151,7 @@ public class QuestionController : MonoBehaviour
     public class Answer
     {
         public List<String> answerButton;
+        public int ansOnButton;
     }
 
     // Update is called once per frame

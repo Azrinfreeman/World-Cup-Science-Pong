@@ -14,6 +14,7 @@ public class GameController : MonoBehaviour
     public System.Random rnd3 = new System.Random();
     public List<int> randomAnswer;
 
+    public TextMeshProUGUI textQuestion;
     public TextMeshProUGUI questionTransform;
     public TextMeshProUGUI questionNumberRN;
     int questionNumberRNCount;
@@ -21,6 +22,8 @@ public class GameController : MonoBehaviour
     public int questionCount = 0;
     public int maxQuestionCount;
     int questionsNum;
+    public int length;
+    public int buttonNum;
     public int answers;
     public int playerInt = 0;
     public Button[] ansButton = new Button[4];
@@ -38,7 +41,7 @@ public class GameController : MonoBehaviour
 */
         questionsNum = rnd3.Next(
             0,
-            QuestionController.instance.levels[QuestionController.instance.level].question.Count
+            QuestionController.instance.levels[QuestionController.instance.level - 1].question.Count
         );
         Invoke("startControlling", 0.12f);
     }
@@ -58,7 +61,7 @@ public class GameController : MonoBehaviour
                 .transform.GetChild(3)
                 .transform.GetComponent<Button>();
             ShowQuestion(playerInt);
-            Debug.Log("player1 is active");
+            //Debug.Log("player1 is active");
         }
         else if (transform.GetChild(0).transform.GetChild(1).transform.gameObject.activeSelf)
         {
@@ -72,13 +75,13 @@ public class GameController : MonoBehaviour
                 .transform.GetChild(3)
                 .transform.GetComponent<Button>();
             ShowQuestion(playerInt);
-            Debug.Log("player2 is active");
+            //Debug.Log("player2 is active");
         }
     }
 
     void OnEnable()
     {
-        Invoke("startControlling", 0.12f);
+        // Invoke("startControlling", 0.12f);
     }
 
     public void ShowQuestion(int playerInt)
@@ -91,6 +94,17 @@ public class GameController : MonoBehaviour
         //Timing.gameObject.SetActive(true);
 
         //if else level
+
+        //question for the number
+        textQuestion = transform
+            .GetChild(0)
+            .transform.GetChild(playerInt)
+            .GetChild(0)
+            .transform.GetChild(1)
+            .transform.GetChild(0)
+            .transform.GetChild(0)
+            .GetComponent<TextMeshProUGUI>();
+
         questionNumberRN = transform
             .GetChild(0)
             .transform.GetChild(playerInt)
@@ -101,10 +115,18 @@ public class GameController : MonoBehaviour
             .GetComponent<TextMeshProUGUI>();
         questionNumberRN.text = questionNumberRNCount.ToString();
 
-        questionsNum = rnd3.Next(0, QuestionController.instance.questionsList.Count);
+        questionsNum = rnd3.Next(
+            0,
+            QuestionController.instance.levels[QuestionController.instance.level - 1].question.Count
+        );
         answers = questionsNum;
 
-        questions = "";
+        //question for the number
+        questions = QuestionController
+            .instance.levels[QuestionController.instance.level - 1]
+            .question[answers]
+            .question.ToString();
+
         questionTransform = transform
             .GetChild(0)
             .transform.GetChild(playerInt)
@@ -158,79 +180,157 @@ public class GameController : MonoBehaviour
         //assign random answer to random buttons
         //enable the component on buttons;
         EnableAllButtons();
-        int buttonNum;
+
         if (QuestionController.instance.level < 4)
         {
             //choose which button to put answer
             buttonNum = rnd.Next(2);
             //add function to button
+
+            for (int a = 0; a < 2; a++)
+            {
+                ansButton[a].onClick.RemoveAllListeners();
+                ansButton[a].transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "";
+                Debug.Log("Clear button");
+            }
+
             ansButton[buttonNum].onClick.RemoveAllListeners();
             ansButton[buttonNum].onClick.AddListener(() => CorrectButtonFunction());
+            ansButton[buttonNum].transform.GetChild(0).GetComponent<TextMeshProUGUI>().text =
+                QuestionController
+                    .instance
+                    .levels[QuestionController.instance.level - 1]
+                    .question[questionsNum]
+                    .answer
+                    .answerButton[
+                    QuestionController
+                        .instance
+                        .levels[QuestionController.instance.level - 1]
+                        .question[questionsNum]
+                        .answer
+                        .ansOnButton
+                ] + " BETUL";
 
             //add play sound button to soundbtn
             soundBtn.onClick.RemoveAllListeners();
-            soundBtn.onClick.AddListener(() => PlayCorrectAnswerSound(answers));
+            //soundBtn.onClick.AddListener(() => PlayCorrectAnswerSound(answers));
             //add something to button child
-            ansButton[buttonNum].GetComponent<Image>().sprite = QuestionController
-                .instance.questionsList[answers]
-                .GetComponent<Image>()
-                .sprite;
+            /*            ansButton[buttonNum].GetComponent<Image>().sprite = QuestionController
+                            .instance.questionsList[answers]
+                            .GetComponent<Image>()
+                            .sprite;*/
+
+            Debug.Log(
+                "Jawapan:"
+                    + QuestionController
+                        .instance
+                        .levels[QuestionController.instance.level - 1]
+                        .question[questionsNum]
+                        .answer
+                        .answerButton[
+                        QuestionController
+                            .instance
+                            .levels[QuestionController.instance.level - 1]
+                            .question[questionsNum]
+                            .answer
+                            .ansOnButton
+                    ]
+            );
         }
-        else
+        else if (QuestionController.instance.level > 4)
         {
             //choose which button to put answer
             buttonNum = rnd.Next(4);
+
+            for (int a = 0; a < 4; a++)
+            {
+                ansButton[a].onClick.RemoveAllListeners();
+                Debug.Log("Clear button");
+            }
             //add function to button
             ansButton[buttonNum].onClick.RemoveAllListeners();
             ansButton[buttonNum].onClick.AddListener(() => CorrectButtonFunction());
-
+            ansButton[buttonNum].transform.GetChild(0).GetComponent<TextMeshProUGUI>().text =
+                QuestionController
+                    .instance
+                    .levels[QuestionController.instance.level - 1]
+                    .question[questionsNum]
+                    .answer
+                    .answerButton[
+                    QuestionController
+                        .instance
+                        .levels[QuestionController.instance.level - 1]
+                        .question[questionsNum]
+                        .answer
+                        .ansOnButton
+                ];
             //add play sound button to soundbtn
             soundBtn.onClick.RemoveAllListeners();
-            soundBtn.onClick.AddListener(() => PlayCorrectAnswerSound(answers));
+            //soundBtn.onClick.AddListener(() => PlayCorrectAnswerSound(answers));
             //add something to button child
-            ansButton[buttonNum].GetComponent<Image>().sprite = QuestionController
-                .instance.questionsList[answers]
-                .GetComponent<Image>()
-                .sprite;
-        }
+            /*ansButton[buttonNum].GetComponent<Image>().sprite = QuestionController
+                    .instance.questionsList[answers]
+                    .GetComponent<Image>()
+                    .sprite;
+                    */
 
-        int length;
+            Debug.Log(
+                "Jawapan:"
+                    + QuestionController
+                        .instance
+                        .levels[QuestionController.instance.level - 1]
+                        .question[questionsNum]
+                        .answer
+                        .answerButton[
+                        QuestionController
+                            .instance
+                            .levels[QuestionController.instance.level - 1]
+                            .question[questionsNum]
+                            .answer
+                            .ansOnButton
+                    ]
+            );
+        }
+        Debug.Log("questionNum: " + questionsNum);
+
         if (QuestionController.instance.level < 4)
         {
             length = 2;
             ansButton[2].gameObject.transform.parent.transform.gameObject.SetActive(false);
         }
-        else
+        else if (QuestionController.instance.level > 4)
         {
             length = 4;
         }
-
+        Debug.Log("buttonNum: " + buttonNum);
         for (int i = 0; i < length; i++)
         {
+            Debug.Log("before i = " + i);
             if (i != buttonNum)
             {
-                /*
-                if (questionCount >= 0 && questionCount <= 20) // not more than 10
-                {
-                    randomAnswer = rnd.Next(2, 11);
-                    while (randomAnswer == answers)
-                    {
-                        randomAnswer = rnd.Next(2, 11);
-                    }
-                    //                            Debug.Log("answer not more than 10 ");
-                }
-                
-                */
-
-                //chose random number and check if any same number already in the list
-                int chooseRandom = rnd.Next(0, QuestionController.instance.questionsList.Count);
+                //the list
+                int chooseRandom = rnd.Next(
+                    0,
+                    QuestionController
+                        .instance
+                        .levels[QuestionController.instance.level - 1]
+                        .question
+                        .Count
+                );
 
                 //if list is empty (first time)
                 if (randomAnswer.Count == 0)
                 {
                     while (chooseRandom == questionsNum)
                     {
-                        chooseRandom = rnd.Next(0, QuestionController.instance.questionsList.Count);
+                        chooseRandom = rnd.Next(
+                            0,
+                            QuestionController
+                                .instance
+                                .levels[QuestionController.instance.level - 1]
+                                .question
+                                .Count
+                        );
                     }
                     randomAnswer.Add(chooseRandom);
                 }
@@ -246,7 +346,11 @@ public class GameController : MonoBehaviour
                             //generate new number if chooseRandom already in the list
                             chooseRandom = rnd.Next(
                                 0,
-                                QuestionController.instance.questionsList.Count
+                                QuestionController
+                                    .instance
+                                    .levels[QuestionController.instance.level - 1]
+                                    .question
+                                    .Count
                             );
                         }
                     }
@@ -255,7 +359,14 @@ public class GameController : MonoBehaviour
                     {
                         Debug.Log("Duplicated");
                         //generate new number if chooseRandom already in the list
-                        chooseRandom = rnd.Next(0, QuestionController.instance.questionsList.Count);
+                        chooseRandom = rnd.Next(
+                            0,
+                            QuestionController
+                                .instance
+                                .levels[QuestionController.instance.level - 1]
+                                .question
+                                .Count
+                        );
                     }
 
                     //
@@ -264,12 +375,25 @@ public class GameController : MonoBehaviour
                 }
                 ansButton[i].onClick.RemoveAllListeners();
                 ansButton[i].onClick.AddListener(() => buttonFunction());
-                ansButton[i].GetComponent<Image>().sprite = QuestionController
-                    .instance.questionsList[chooseRandom]
-                    .GetComponent<Image>()
-                    .sprite;
+                /* ansButton[i].GetComponent<Image>().sprite = QuestionController
+                     .instance.questionsList[chooseRandom]
+                     .GetComponent<Image>()
+                     .sprite;
+                 */
+
+                //button salah
+
+                Debug.Log("i = " + i);
+                ansButton[i].transform.GetChild(0).GetComponent<TextMeshProUGUI>().text =
+                    QuestionController
+                        .instance
+                        .levels[QuestionController.instance.level - 1]
+                        .question[questionsNum]
+                        .answer
+                        .answerButton[i];
             }
         }
+
         if (questionCount == 0)
         {
             //play notidication sound
@@ -292,25 +416,6 @@ public class GameController : MonoBehaviour
         {
             yield return new WaitForSeconds(0.6f);
         }
-
-        //play answer sound
-
-        if (
-            !QuestionController
-                .instance.questionsList[answers]
-                .GetComponent<AudioSource>()
-                .isPlaying
-        )
-        {
-            QuestionController.instance.questionsList[answers].GetComponent<AudioSource>().Play();
-        }
-
-        //activate background and show question also off center;
-        // transform.GetChild(0).transform.gameObject.SetActive(true);
-        //  transform.GetChild(2).transform.gameObject.SetActive(false);
-        // transform.GetChild(3).transform.gameObject.SetActive(true);
-
-        //Time.timeScale = 0;
     }
 
     public void disableTick()
@@ -420,7 +525,7 @@ public class GameController : MonoBehaviour
 
     void EnableAllButtons()
     {
-        Debug.Log(ansButton.Length);
+        //        Debug.Log(ansButton.Length);
         for (int i = 0; i < ansButton.Length; i++)
         {
             ansButton[i].GetComponent<Button>().enabled = true;
@@ -470,13 +575,10 @@ public class GameController : MonoBehaviour
         //roundTransform.GetComponent<Animator>().Play("afterCollected");
 
         //destroy and remove the questions from the list
-        QuestionController.instance.questionsList.RemoveAt(answers);
-        Destroy(
-            GameObject
-                .Find("QuestionList-" + QuestionController.instance.level)
-                .transform.GetChild(answers)
-                .gameObject
-        );
+        QuestionController
+            .instance.levels[QuestionController.instance.level - 1]
+            .question.RemoveAt(questionsNum);
+
         //Destroy(gameObject);
 
         yield return new WaitForSeconds(1f);

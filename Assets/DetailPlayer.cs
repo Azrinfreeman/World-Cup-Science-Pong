@@ -208,7 +208,7 @@ public class DetailPlayer : MonoBehaviour
                     .GetComponent<TransformController2>()
                     .RefreshItem();
             }
-            Debug.Log("refresh item0000");
+            //            Debug.Log("refresh item0000");
             transformController.ClearChildrenAndDismiss();
         }
         else
