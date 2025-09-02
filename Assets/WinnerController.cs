@@ -145,7 +145,7 @@ public class WinnerController : MonoBehaviour
 
                 using (
                     UnityWebRequest www = UnityWebRequest.Post(
-                        "https://app-hanana.com/pong2d/insertmark.php",
+                        "https://app-hanana.com/worldcupsains/insertmark.php",
                         form
                     )
                 )
@@ -200,7 +200,7 @@ public class WinnerController : MonoBehaviour
 
                 using (
                     UnityWebRequest www = UnityWebRequest.Post(
-                        "https://app-hanana.com/pong2d/insertmark.php",
+                        "https://app-hanana.com/worldcupsains/insertmark.php",
                         form2
                     )
                 )

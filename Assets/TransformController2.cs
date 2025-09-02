@@ -151,7 +151,7 @@ public class TransformController2 : MonoBehaviour
         userCollection.Clear();
         using (
             UnityWebRequest www = UnityWebRequest.Get(
-                "https://app-hanana.com/pong2d/fetchRanking.php"
+                "https://app-hanana.com/worldcupsains/fetchRanking.php"
             )
         )
         {

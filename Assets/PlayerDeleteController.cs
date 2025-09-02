@@ -30,7 +30,7 @@ public class PlayerDeleteController : MonoBehaviour
         Debug.Log("deletPlayer");
         using (
             UnityWebRequest www = UnityWebRequest.Get(
-                "https://app-hanana.com/pong2d/fetchDelete.php?name="
+                "https://app-hanana.com/worldcupsains/fetchDelete.php?name="
                     + PlayerPrefs.GetString("CurrentPlayer_")
             )
         )
