@@ -242,7 +242,7 @@ public class GameController : MonoBehaviour
         else if (QuestionController.instance.level > 4)
         {
             //assign to list temp
-            for (int b = 0; b < 2; b++)
+            for (int b = 0; b < 4; b++)
             {
                 answerArray.Add(
                     QuestionClasses
